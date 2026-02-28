@@ -134,7 +134,7 @@
 
   /* Rider cards */
   .rider-grid { display: flex; flex-direction: column; gap: 10px; }
-  .rider-card { background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); border: 2px solid #222; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all 0.25s ease; position: relative; overflow: hidden; }
+  .rider-card { background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); border: 2px solid #222; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all 0.25s ease; position: relative; overflow: hidden; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   .rider-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); transition: width 0.3s ease; }
   .rider-card:hover { border-color: var(--accent); transform: translateX(4px); box-shadow: 0 0 20px rgba(255,68,0,0.15); }
   .rider-card:hover::before { width: 6px; }
@@ -157,28 +157,7 @@
 
   /* Predictions */
   .prediction-grid { display: flex; flex-direction: column; gap: 10px; }
-  .prediction-card { background: #111; border: 2px solid #222; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 12px; } translateX(4px); box-shadow: 0 0 20px rgba(255,68,0,0.15); }
-  .rider-card:hover::before { width: 6px; }
-  .rider-card.selected { border-color: var(--accent); background: linear-gradient(135deg, #1a1008 0%, #0d0d0d 100%); box-shadow: 0 0 25px rgba(255,68,0,0.2); }
-  .rider-card.selected::before { width: 6px; }
-  .rider-number { font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 900; color: var(--accent); min-width: 50px; text-align: center; text-shadow: 0 0 10px rgba(255,68,0,0.3); }
-  .rider-info { flex: 1; }
-  .rider-name { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
-  .rider-team { font-size: 12px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
-  .rider-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #333; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; font-size: 14px; }
-  .rider-card.selected .rider-check { border-color: var(--accent); background: var(--accent); color: #000; }
-
-  /* Confidence */
-  .confidence-section { margin: 20px 0; }
-  .confidence-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-  .confidence-value { font-family: 'Orbitron', monospace; font-size: 24px; font-weight: 900; color: #ff4400; }
-  .slider-track { position: relative; height: 48px; background: #111; border-radius: 6px; border: 1px solid #222; overflow: hidden; cursor: pointer; }
-  .slider-fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, #ff0000, #ff4400, #ffaa00); transition: width 0.15s ease; border-radius: 6px 0 0 6px; }
-  .slider-labels { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 12px; pointer-events: none; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.6); }
-
-  /* Predictions */
-  .prediction-grid { display: flex; flex-direction: column; gap: 10px; }
-  .prediction-card { background: #111; border: 2px solid #222; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 12px; }
+  .prediction-card { background: #111; border: 2px solid #222; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 12px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
   .prediction-card:hover { border-color: #ff4400; transform: translateX(4px); }
   .prediction-card.selected { border-color: #ff4400; background: linear-gradient(135deg, #1a1008, #0d0d0d); }
   .prediction-icon { font-size: 24px; min-width: 36px; text-align: center; }
@@ -186,7 +165,7 @@
   .prediction-sub { font-size: 11px; color: #888; letter-spacing: 1px; }
 
   /* Buttons */
-  .btn { display: block; width: 100%; padding: 16px; border: none; border-radius: 6px; font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; margin-top: 20px; }
+  .btn { display: block; width: 100%; padding: 16px; border: none; border-radius: 6px; font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; margin-top: 20px; -webkit-tap-highlight-color: transparent; touch-action: manipulation; -webkit-appearance: none; }
   .btn-primary { background: linear-gradient(135deg, #ff0000, #ff4400); color: #fff; box-shadow: 0 4px 20px rgba(255,68,0,0.3); }
   .btn-primary:hover { box-shadow: 0 4px 30px rgba(255,68,0,0.6); transform: translateY(-2px); }
   .btn-primary:disabled { background: #333; color: #666; box-shadow: none; cursor: not-allowed; transform: none; }
@@ -266,28 +245,28 @@
     <div class="step-label">Step 1 of 3</div>
     <div class="step-title">Pick Your Winner</div>
     <div class="rider-grid">
-      <div class="rider-card" style="--accent:#ff6600" onclick="selectRider(this, 'Eli Tomac', '3', 'tomac')">
+      <div class="rider-card" style="--accent:#ff6600" data-rider="Eli Tomac" data-number="3" data-key="tomac" role="button" tabindex="0">
         <div class="rider-number">#3</div>
         <div class="rider-info"><div class="rider-name">Eli Tomac</div><div class="rider-team">Star Racing Yamaha</div></div>
         <div class="rider-check">&#10003;</div>
       </div>
-      <div class="rider-card" style="--accent:#ff0000" onclick="selectRider(this, 'Hunter Lawrence', '96', 'lawrence')">
+      <div class="rider-card" style="--accent:#ff0000" data-rider="Hunter Lawrence" data-number="96" data-key="lawrence" role="button" tabindex="0">
         <div class="rider-number">#96</div>
         <div class="rider-info"><div class="rider-name">Hunter Lawrence</div><div class="rider-team">Team Honda HRC</div></div>
         <div class="rider-check">&#10003;</div>
       </div>
-      <div class="rider-card" style="--accent:#0066ff" onclick="selectRider(this, 'Cooper Webb', '1', 'webb')">
+      <div class="rider-card" style="--accent:#0066ff" data-rider="Cooper Webb" data-number="1" data-key="webb" role="button" tabindex="0">
         <div class="rider-number">#1</div>
         <div class="rider-info"><div class="rider-name">Cooper Webb</div><div class="rider-team">Red Bull KTM</div></div>
         <div class="rider-check">&#10003;</div>
       </div>
-      <div class="rider-card" style="--accent:#ffcc00" onclick="selectRider(this, 'Ken Roczen', '94', 'roczen')">
+      <div class="rider-card" style="--accent:#ffcc00" data-rider="Ken Roczen" data-number="94" data-key="roczen" role="button" tabindex="0">
         <div class="rider-number">#94</div>
         <div class="rider-info"><div class="rider-name">Ken Roczen</div><div class="rider-team">Suzuki Factory</div></div>
         <div class="rider-check">&#10003;</div>
       </div>
     </div>
-    <button class="btn btn-primary" id="btn1" disabled onclick="goToStep(2)">Next &#8212; Lock It In</button>
+    <button class="btn btn-primary" id="btn1" disabled>Next &#8212; Lock It In</button>
   </div>
 
   <!-- STEP 2 -->
@@ -304,7 +283,7 @@
         <div class="slider-labels"><span>Gut Feel</span><span>Lock</span><span>All In</span></div>
       </div>
     </div>
-    <button class="btn btn-primary" onclick="goToStep(3)">Next &#8212; One More</button>
+    <button class="btn btn-primary">Next &#8212; One More</button>
   </div>
 
   <!-- STEP 3 -->
@@ -312,24 +291,24 @@
     <div class="step-label">Step 3 of 3</div>
     <div class="step-title">Bold Prediction</div>
     <div class="prediction-grid">
-      <div class="prediction-card" onclick="selectPrediction(this, 'Holeshot to checkered flag &#8212; wire to wire')">
+      <div class="prediction-card" data-pred="Holeshot to checkered flag — wire to wire" role="button" tabindex="0">
         <div class="prediction-icon">&#128640;</div>
         <div><div class="prediction-text">Wire to Wire</div><div class="prediction-sub">Holeshot and never looks back</div></div>
       </div>
-      <div class="prediction-card" onclick="selectPrediction(this, 'Last lap pass &#8212; heart attack finish')">
+      <div class="prediction-card" data-pred="Last lap pass — heart attack finish" role="button" tabindex="0">
         <div class="prediction-icon">&#9889;</div>
         <div><div class="prediction-text">Last Lap Pass</div><div class="prediction-sub">Heart attack finish</div></div>
       </div>
-      <div class="prediction-card" onclick="selectPrediction(this, 'Comes from the back &#8212; charge through the pack')">
+      <div class="prediction-card" data-pred="Comes from the back — charge through the pack" role="button" tabindex="0">
         <div class="prediction-icon">&#128293;</div>
         <div><div class="prediction-text">From the Back</div><div class="prediction-sub">Charges through the pack</div></div>
       </div>
-      <div class="prediction-card" onclick="selectPrediction(this, 'Survives the chaos &#8212; last man standing')">
+      <div class="prediction-card" data-pred="Survives the chaos — last man standing" role="button" tabindex="0">
         <div class="prediction-icon">&#128128;</div>
         <div><div class="prediction-text">Chaos Survivor</div><div class="prediction-sub">Last one standing in Daytona carnage</div></div>
       </div>
     </div>
-    <button class="btn btn-primary" id="btn3" disabled onclick="submitVote()">Submit My Pick</button>
+    <button class="btn btn-primary" id="btn3" disabled>Submit My Pick</button>
   </div>
 
   <!-- RESULTS -->
@@ -355,8 +334,8 @@
     </div>
 
     <div class="share-text">Screenshot &amp; share your pick &#128242;</div>
-    <button class="btn btn-primary" onclick="copyResult()">Copy My Pick</button>
-    <button class="btn btn-restart" onclick="restart()">Pick Again</button>
+    <button class="btn btn-primary" id="btnCopy">Copy My Pick</button>
+    <button class="btn btn-restart" id="btnRestart">Pick Again</button>
   </div>
 
   <div class="footer">REVMX &#215; Moto Music &#215; Daytona SX 2026</div>
@@ -422,22 +401,59 @@
     localStorage.setItem(STORAGE_KEY + '_voted', 'true');
   }
 
-  function selectRider(card, name, number, key) {
-    document.querySelectorAll('.rider-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    selectedRider = name;
-    selectedNumber = number;
-    selectedKey = key;
-    document.getElementById('btn1').disabled = false;
+  // iOS-friendly tap handler — uses touchend with fallback to click
+  function addTap(el, handler) {
+    let touchMoved = false;
+    el.addEventListener('touchstart', function() { touchMoved = false; }, { passive: true });
+    el.addEventListener('touchmove', function() { touchMoved = true; }, { passive: true });
+    el.addEventListener('touchend', function(e) {
+      if (!touchMoved) {
+        e.preventDefault();
+        handler.call(this, e);
+      }
+    });
+    el.addEventListener('click', function(e) {
+      handler.call(this, e);
+    });
   }
 
-  function selectPrediction(card, pred) {
-    document.querySelectorAll('.prediction-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
-    prediction = pred;
-    predShort = card.querySelector('.prediction-text').textContent;
-    document.getElementById('btn3').disabled = false;
-  }
+  // Rider card selection
+  document.querySelectorAll('.rider-card').forEach(function(card) {
+    addTap(card, function() {
+      document.querySelectorAll('.rider-card').forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      selectedRider = card.dataset.rider;
+      selectedNumber = card.dataset.number;
+      selectedKey = card.dataset.key;
+      document.getElementById('btn1').disabled = false;
+    });
+  });
+
+  // Prediction card selection
+  document.querySelectorAll('.prediction-card').forEach(function(card) {
+    addTap(card, function() {
+      document.querySelectorAll('.prediction-card').forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      prediction = card.dataset.pred;
+      predShort = card.querySelector('.prediction-text').textContent;
+      document.getElementById('btn3').disabled = false;
+    });
+  });
+
+  // Button taps
+  addTap(document.getElementById('btn1'), function() {
+    if (!this.disabled) goToStep(2);
+  });
+  addTap(document.querySelector('#step2 .btn-primary'), function() {
+    goToStep(3);
+  });
+  addTap(document.getElementById('btn3'), function() {
+    if (!this.disabled) submitVote();
+  });
+
+  // Result page buttons
+  addTap(document.getElementById('btnCopy'), function() { copyResult(); });
+  addTap(document.getElementById('btnRestart'), function() { restart(); });
 
   // Slider
   const sliderTrack = document.getElementById('sliderTrack');
@@ -451,12 +467,12 @@
     document.getElementById('sliderFill').style.width = pct + '%';
     document.getElementById('confValue').textContent = confidence + '%';
   }
-  sliderTrack.addEventListener('mousedown', (e) => { isDragging = true; updateSlider(e); });
-  document.addEventListener('mousemove', (e) => { if (isDragging) updateSlider(e); });
-  document.addEventListener('mouseup', () => { isDragging = false; });
-  sliderTrack.addEventListener('touchstart', (e) => { isDragging = true; updateSlider(e); }, { passive: true });
-  document.addEventListener('touchmove', (e) => { if (isDragging) updateSlider(e); }, { passive: true });
-  document.addEventListener('touchend', () => { isDragging = false; });
+  sliderTrack.addEventListener('mousedown', function(e) { isDragging = true; updateSlider(e); });
+  document.addEventListener('mousemove', function(e) { if (isDragging) updateSlider(e); });
+  document.addEventListener('mouseup', function() { isDragging = false; });
+  sliderTrack.addEventListener('touchstart', function(e) { isDragging = true; updateSlider(e); }, { passive: true });
+  document.addEventListener('touchmove', function(e) { if (isDragging) updateSlider(e); }, { passive: true });
+  document.addEventListener('touchend', function() { isDragging = false; });
 
   function goToStep(step) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
@@ -489,4 +505,67 @@
     ['line1','line2'].forEach(l => document.getElementById(l).classList.add('done'));
 
     document.getElementById('resultName').textContent = selectedRider;
-    document.getElementById('resultNumber').textContent = sele
+    document.getElementById('resultNumber').textContent = selectedNumber;
+    document.getElementById('resultConf').textContent = confidence + '%';
+    document.getElementById('resultPredShort').textContent = predShort;
+
+    renderTally();
+  }
+
+  function renderTally() {
+    const total = Object.values(votes).reduce((a,b) => a+b, 0);
+    const maxVotes = Math.max(...Object.values(votes));
+    let html = '';
+
+    // Sort by votes descending
+    const sorted = Object.entries(votes).sort((a,b) => b[1] - a[1]);
+
+    for (const [key, count] of sorted) {
+      const rider = riders[key];
+      const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+      const barWidth = maxVotes > 0 ? Math.max(3, (count / maxVotes) * 100) : 3;
+      const isYourPick = key === selectedKey;
+
+      html += '<div class="tally-bar-wrap">';
+      html += '<div class="tally-rider-row">';
+      html += '<span class="tally-rider-name" style="color:' + rider.color + '">' + rider.number + ' ' + rider.name + (isYourPick ? ' &#9668;' : '') + '</span>';
+      html += '<span class="tally-rider-votes">' + count + ' votes</span>';
+      html += '</div>';
+      html += '<div class="tally-bar">';
+      html += '<div class="tally-fill" style="width:' + barWidth + '%; background: linear-gradient(90deg, ' + rider.color + ', ' + rider.color + '88);">';
+      html += '<span class="tally-pct">' + pct + '%</span>';
+      html += '</div></div></div>';
+    }
+
+    document.getElementById('tallyBars').innerHTML = html;
+    document.getElementById('totalVotesLabel').textContent = total + ' total votes';
+  }
+
+  function copyResult() {
+    const text = '\u{1F3C1} My Daytona SX Pick: ' + selectedRider + ' ' + selectedNumber +
+      ' | ' + predShort + ' | ' + confidence + '% confident\n' + prediction +
+      '\n\nCast your vote: ' + window.location.href + '\n#DaytonaSX #Supercross #REVMX';
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.querySelector('#stepResult .btn-primary');
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy My Pick', 2000);
+    });
+  }
+
+  function restart() {
+    selectedRider = null; selectedNumber = null; selectedKey = null;
+    confidence = 50; prediction = null;
+    document.querySelectorAll('.rider-card, .prediction-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('sliderFill').style.width = '50%';
+    document.getElementById('confValue').textContent = '50%';
+    document.getElementById('btn1').disabled = true;
+    document.getElementById('btn3').disabled = true;
+    goToStep(1);
+  }
+
+  // Init — load live votes and auto-refresh every 10 seconds
+  loadVotes();
+  setInterval(loadVotes, 10000);
+</script>
+</body>
+</html>
