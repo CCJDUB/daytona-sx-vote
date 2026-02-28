@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Daytona SX — Pick Your Winner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Rajdhani', sans-serif; background: #0a0a0a; color: #fff; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: repeating-conic-gradient(#111 0% 25%, transparent 0% 50%) 0 0 / 40px 40px; opacity: 0.15; z-index: 0; }
+  .container { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 20px 16px; min-height: 100vh; display: flex; flex-direction: column; }
+  .racing-stripe { height: 6px; background: linear-gradient(90deg, #ff0000, #ff4400, #ffaa00, #ff4400, #ff0000); border-radius: 3px; margin-bottom: 16px; animation: stripeGlow 2s ease-in-out infinite; }
+  @keyframes stripeGlow { 0%, 100% { box-shadow: 0 0 10px rgba(255,68,0,0.5); } 50% { box-shadow: 0 0 25px rgba(255,68,0,0.9); } }
+  .event-badge { display: inline-block; background: linear-gradient(135deg, #ff0000, #cc0000); color: #fff; font-family: 'Orbitron', monospace; font-size: 10px; font-weight: 700; letter-spacing: 3px; padding: 6px 14px; border-radius: 3px; text-transform: uppercase; margin-bottom: 8px; }
+  h1 { font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; line-height: 1.1; margin-bottom: 4px; background: linear-gradient(180deg, #ffffff 0%, #aaaaaa 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { font-size: 15px; color: #ff4400; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 20px; }
+  .progress-track { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+  .progress-dot { width: 36px; height: 36px; border-radius: 50%; border: 2px solid #333; display: flex; align-items: center; justify-content: center; font-family: 'Orbitron', monospace; font-size: 13px; font-weight: 700; color: #555; transition: all 0.4s ease; }
+  .progress-dot.active { border-color: #ff4400; color: #ff4400; box-shadow: 0 0 12px rgba(255,68,0,0.4); }
+  .progress-dot.done { border-color: #00cc44; background: #00cc44; color: #000; }
+  .progress-line { flex: 1; height: 2px; background: #333; transition: background 0.4s ease; }
+  .progress-line.done { background: #00cc44; }
+  .step-label { font-size: 11px; color: #666; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .step-title { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #fff; }
+  .step { display: none; animation: slideIn 0.4s ease; }
+  .step.active { display: block; }
+  @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+  .rider-grid { display: flex; flex-direction: column; gap: 10px; }
+  .rider-card { background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%); border: 2px solid #222; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; transition: all 0.25s ease; position: relative; overflow: hidden; }
+  .rider-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); transition: width 0.3s ease; }
+  .rider-card:hover { border-color: var(--accent); transform: translateX(4px); box-shadow: 0 0 20px rgba(255,68,0,0.15); }
+  .rider-card:hover::before { width: 6px; }
+  .rider-card.selected { border-color: var(--accent); background: linear-gradient(135deg, #1a1008 0%, #0d0d0d 100%); box-shadow: 0 0 25px rgba(255,68,0,0.2); }
+  .rider-card.selected::before { width: 6px; }
+  .rider-number { font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 900; color: var(--accent); min-width: 50px; text-align: center; text-shadow: 0 0 10px rgba(255,68,0,0.3); }
+  .rider-info { flex: 1; }
+  .rider-name { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
+  .rider-team { font-size: 12px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+  .rider-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #333; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; font-size: 14px; }
+  .rider-card.selected .rider-check { border-color: var(--accent); background: var(--accent); color: #000; }
+  .confidence-section { margin: 20px 0; }
+  .confidence-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .confidence-value { font-family: 'Orbitron', monospace; font-size: 24px; font-weight: 900; color: #ff4400; }
+  .slider-track { position: relative; height: 48px; background: #111; border-radius: 6px; border: 1px solid #222; overflow: hidden; cursor: pointer; }
+  .slider-fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, #ff0000, #ff4400, #ffaa00); transition: width 0.15s ease; border-radius: 6px 0 0 6px; }
+  .slider-labels { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 12px; pointer-events: none; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+  .prediction-grid { display: flex; flex-direction: column; gap: 10px; }
+  .prediction-card { background: #111; border: 2px solid #222; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 12px; }
+  .prediction-card:hover { border-color: #ff4400; transform: translateX(4px); }
+  .prediction-card.selected { border-color: #ff4400; background: linear-gradient(135deg, #1a1008, #0d0d0d); }
+  .prediction-icon { font-size: 24px; min-width: 36px; text-align: center; }
+  .prediction-text { font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .prediction-sub { font-size: 11px; color: #888; letter-spacing: 1px; }
+  .btn { display: block; width: 100%; padding: 16px; border: none; border-radius: 6px; font-family: 'Orbitron', monospace; font-size: 16px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; margin-top: 20px; }
+  .btn-primary { background: linear-gradient(135deg, #ff0000, #ff4400); color: #fff; box-shadow: 0 4px 20px rgba(255,68,0,0.3); }
+  .btn-primary:hover { box-shadow: 0 4px 30px rgba(255,68,0,0.6); transform: translateY(-2px); }
+  .btn-primary:disabled { background: #333; color: #666; box-shadow: none; cursor: not-allowed; transform: none; }
+  .result-card { background: linear-gradient(135deg, #111 0%, #0a0a0a 100%); border: 2px solid #ff4400; border-radius: 12px; padding: 30px 24px; text-align: center; margin: 20px 0; position: relative; overflow: hidden; }
+  .result-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: conic-gradient(from 0deg, transparent, rgba(255,68,0,0.05), transparent, rgba(255,68,0,0.05)); animation: spin 8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .result-inner { position: relative; z-index: 1; }
+  .result-flag { font-size: 48px; margin-bottom: 12px; }
+  .result-pick { font-family: 'Orbitron', monospace; font-size: 14px; color: #ff4400; letter-spacing: 3px; margin-bottom: 8px; }
+  .result-name { font-family: 'Orbitron', monospace; font-size: 32px; font-weight: 900; text-transform: uppercase; margin-bottom: 4px; }
+  .result-number { font-family: 'Orbitron', monospace; font-size: 18px; color: #888; margin-bottom: 20px; }
+  .result-stats { display: flex; justify-content: center; gap: 24px; margin-top: 16px; }
+  .stat-box { text-align: center; }
+  .stat-value { font-family: 'Orbitron', monospace; font-size: 20px; font-weight: 900; color: #ff4400; }
+  .stat-label { font-size: 10px; color: #666; letter-spacing: 2px; text-transform: uppercase; }
+  .share-text { font-size: 13px; color: #666; margin-top: 20px; letter-spacing: 1px; }
+  .btn-restart { background: transparent; border: 2px solid #333; color: #888; margin-top: 12px; }
+  .btn-restart:hover { border-color: #ff4400; color: #ff4400; }
+  .footer { margin-top: auto; padding-top: 20px; text-align: center; font-size: 10px; color: #333; letter-spacing: 2px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="racing-stripe"></div>
+  <div class="event-badge">Supercross 2026</div>
+  <h1>Daytona SX</h1>
+  <div class="subtitle">Who's Taking the Checkers?</div>
+  <div class="progress-track">
+    <div class="progress-dot active" id="dot1">1</div>
+    <div class="progress-line" id="line1"></div>
+    <div class="progress-dot" id="dot2">2</div>
+    <div class="progress-line" id="line2"></div>
+    <div class="progress-dot" id="dot3">3</div>
+  </div>
+  <div class="step active" id="step1">
+    <div class="step-label">Step 1 of 3</div>
+    <div class="step-title">Pick Your Winner</div>
+    <div class="rider-grid">
+      <div class="rider-card" style="--accent:#ff0000" onclick="selectRider(this, 'Eli Tomac', '3')">
+        <div class="rider-number">#3</div>
+        <div class="rider-info"><div class="rider-name">Eli Tomac</div><div class="rider-team">Star Racing Yamaha</div></div>
+        <div class="rider-check">✓</div>
+      </div>
+      <div class="rider-card" style="--accent:#0066ff" onclick="selectRider(this, 'Hunter Lawrence', '96')">
+        <div class="rider-number">#96</div>
+        <div class="rider-info"><div class="rider-name">Hunter Lawrence</div><div class="rider-team">Team Honda HRC</div></div>
+        <div class="rider-check">✓</div>
+      </div>
+      <div class="rider-card" style="--accent:#ff6600" onclick="selectRider(this, 'Cooper Webb', '2')">
+        <div class="rider-number">#2</div>
+        <div class="rider-info"><div class="rider-name">Cooper Webb</div><div class="rider-team">Red Bull KTM</div></div>
+        <div class="rider-check">✓</div>
+      </div>
+      <div class="rider-card" style="--accent:#ffcc00" onclick="selectRider(this, 'Ken Roczen', '94')">
+        <div class="rider-number">#94</div>
+        <div class="rider-info"><div class="rider-name">Ken Roczen</div><div class="rider-team">Suzuki Factory</div></div>
+        <div class="rider-check">✓</div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btn1" disabled onclick="goToStep(2)">Next — Lock It In</button>
+  </div>
+  <div class="step" id="step2">
+    <div class="step-label">Step 2 of 3</div>
+    <div class="step-title">How Confident?</div>
+    <div class="confidence-section">
+      <div class="confidence-label">
+        <span style="font-size:14px; color:#888; letter-spacing:1px; text-transform:uppercase;">Your Confidence</span>
+        <span class="confidence-value" id="confValue">50%</span>
+      </div>
+      <div class="slider-track" id="sliderTrack">
+        <div class="slider-fill" id="sliderFill" style="width:50%"></div>
+        <div class="slider-labels"><span>Gut Feel</span><span>Lock</span><span>All In</span></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="goToStep(3)">Next — One More</button>
+  </div>
+  <div class="step" id="step3">
+    <div class="step-label">Step 3 of 3</div>
+    <div class="step-title">Bold Prediction</div>
+    <div class="prediction-grid">
+      <div class="prediction-card" onclick="selectPrediction(this, 'Holeshot to checkered flag — wire to wire')">
+        <div class="prediction-icon">🚀</div>
+        <div><div class="prediction-text">Wire to Wire</div><div class="prediction-sub">Holeshot and never looks back</div></div>
+      </div>
+      <div class="prediction-card" onclick="selectPrediction(this, 'Last lap pass — heart attack finish')">
+        <div class="prediction-icon">⚡</div>
+        <div><div class="prediction-text">Last Lap Pass</div><div class="prediction-sub">Heart attack finish</div></div>
+      </div>
+      <div class="prediction-card" onclick="selectPrediction(this, 'Comes from the back — charge through the pack')">
+        <div class="prediction-icon">🔥</div>
+        <div><div class="prediction-text">From the Back</div><div class="prediction-sub">Charges through the pack</div></div>
+      </div>
+      <div class="prediction-card" onclick="selectPrediction(this, 'Survives the chaos — last man standing')">
+        <div class="prediction-icon">💀</div>
+        <div><div class="prediction-text">Chaos Survivor</div><div class="prediction-sub">Last one standing in Daytona carnage</div></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btn3" disabled onclick="showResults()">Submit My Pick</button>
+  </div>
+  <div class="step" id="stepResult">
+    <div class="result-card">
+      <div class="result-inner">
+        <div class="result-flag">🏁</div>
+        <div class="result-pick">Your Pick to Win Daytona</div>
+        <div class="result-name" id="resultName"></div>
+        <div class="result-number" id="resultNumber"></div>
+        <div class="result-stats">
+          <div class="stat-box"><div class="stat-value" id="resultConf"></div><div class="stat-label">Confidence</div></div>
+          <div class="stat-box"><div class="stat-value" id="resultPredShort"></div><div class="stat-label">Prediction</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="background:#111; border:1px solid #222; border-radius:8px; padding:16px; margin:12px 0;">
+      <div style="font-size:12px; color:#888; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px;">Your Call</div>
+      <div style="font-size:15px; color:#ccc; line-height:1.5;" id="resultPredFull"></div>
+    </div>
+    <div class="share-text">Screenshot & share your pick 📲</div>
+    <button class="btn btn-primary" onclick="copyResult()">Copy My Pick</button>
+    <button class="btn btn-restart" onclick="restart()">Pick Again</button>
+  </div>
+  <div class="footer">Moto Music × Daytona SX 2026</div>
+</div>
+<script>
+  let selectedRider = null; let selectedNumber = null; let confidence = 50; let prediction = null; let predShort = null;
+  function selectRider(card, name, number) { document.querySelectorAll('.rider-card').forEach(c => c.classList.remove('selected')); card.classList.add('selected'); selectedRider = name; selectedNumber = number; document.getElementById('btn1').disabled = false; }
+  function selectPrediction(card, pred) { document.querySelectorAll('.prediction-card').forEach(c => c.classList.remove('selected')); card.classList.add('selected'); prediction = pred; predShort = card.querySelector('.prediction-text').textContent; document.getElementById('btn3').disabled = false; }
+  const sliderTrack = document.getElementById('sliderTrack'); let isDragging = false;
+  function updateSlider(e) { const rect = sliderTrack.getBoundingClientRect(); const clientX = e.touches ? e.touches[0].clientX : e.clientX; let pct = ((clientX - rect.left) / rect.width) * 100; pct = Math.max(5, Math.min(100, pct)); confidence = Math.round(pct); document.getElementById('sliderFill').style.width = pct + '%'; document.getElementById('confValue').textContent = confidence + '%'; }
+  sliderTrack.addEventListener('mousedown', (e) => { isDragging = true; updateSlider(e); }); document.addEventListener('mousemove', (e) => { if (isDragging) updateSlider(e); }); document.addEventListener('mouseup', () => { isDragging = false; }); sliderTrack.addEventListener('touchstart', (e) => { isDragging = true; updateSlider(e); }, { passive: true }); document.addEventListener('touchmove', (e) => { if (isDragging) updateSlider(e); }, { passive: true }); document.addEventListener('touchend', () => { isDragging = false; });
+  function goToStep(step) { document.querySelectorAll('.step').forEach(s => s.classList.remove('active')); document.getElementById('step' + step).classList.add('active'); for (let i = 1; i <= 3; i++) { const dot = document.getElementById('dot' + i); dot.classList.remove('active', 'done'); if (i < step) dot.classList.add('done'); else if (i === step) dot.classList.add('active'); if (i < 3) { document.getElementById('line' + i).classList.toggle('done', i < step); } } }
+  function showResults() { document.querySelectorAll('.step').forEach(s => s.classList.remove('active')); document.getElementById('stepResult').classList.add('active'); ['dot1','dot2','dot3'].forEach(d => { document.getElementById(d).classList.add('done'); document.getElementById(d).classList.remove('active'); }); ['line1','line2'].forEach(l => document.getElementById(l).classList.add('done')); document.getElementById('resultName').textContent = selectedRider; document.getElementById('resultNumber').textContent = '#' + selectedNumber; document.getElementById('resultConf').textContent = confidence + '%'; document.getElementById('resultPredShort').textContent = predShort; document.getElementById('resultPredFull').textContent = selectedRider + ' takes the Daytona SX win \u2014 ' + prediction.toLowerCase() + '. ' + confidence + '% confident.'; }
+  function copyResult() { const text = '\ud83c\udfc1 My Daytona SX Pick: ' + selectedRider + ' #' + selectedNumber + ' | ' + predShort + ' | ' + confidence + '% confident\n' + prediction + '\n#DaytonaSX #Supercross'; navigator.clipboard.writeText(text).then(() => { const btn = document.querySelector('#stepResult .btn-primary'); btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy My Pick', 2000); }); }
+  function restart() { selectedRider = null; selectedNumber = null; confidence = 50; prediction = null; document.querySelectorAll('.rider-card, .prediction-card').forEach(c => c.classList.remove('selected')); document.getElementById('sliderFill').style.width = '50%'; document.getElementById('confValue').textContent = '50%'; document.getElementById('btn1').disabled = true; document.getElementById('btn3').disabled = true; goToStep(1); }
+</script>
+</body>
+</html>
