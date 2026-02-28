@@ -157,6 +157,27 @@
 
   /* Predictions */
   .prediction-grid { display: flex; flex-direction: column; gap: 10px; }
+  .prediction-card { background: #111; border: 2px solid #222; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 12px; } translateX(4px); box-shadow: 0 0 20px rgba(255,68,0,0.15); }
+  .rider-card:hover::before { width: 6px; }
+  .rider-card.selected { border-color: var(--accent); background: linear-gradient(135deg, #1a1008 0%, #0d0d0d 100%); box-shadow: 0 0 25px rgba(255,68,0,0.2); }
+  .rider-card.selected::before { width: 6px; }
+  .rider-number { font-family: 'Orbitron', monospace; font-size: 28px; font-weight: 900; color: var(--accent); min-width: 50px; text-align: center; text-shadow: 0 0 10px rgba(255,68,0,0.3); }
+  .rider-info { flex: 1; }
+  .rider-name { font-size: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; line-height: 1.2; }
+  .rider-team { font-size: 12px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+  .rider-check { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #333; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; font-size: 14px; }
+  .rider-card.selected .rider-check { border-color: var(--accent); background: var(--accent); color: #000; }
+
+  /* Confidence */
+  .confidence-section { margin: 20px 0; }
+  .confidence-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .confidence-value { font-family: 'Orbitron', monospace; font-size: 24px; font-weight: 900; color: #ff4400; }
+  .slider-track { position: relative; height: 48px; background: #111; border-radius: 6px; border: 1px solid #222; overflow: hidden; cursor: pointer; }
+  .slider-fill { position: absolute; left: 0; top: 0; bottom: 0; background: linear-gradient(90deg, #ff0000, #ff4400, #ffaa00); transition: width 0.15s ease; border-radius: 6px 0 0 6px; }
+  .slider-labels { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; align-items: center; padding: 0 12px; pointer-events: none; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.6); }
+
+  /* Predictions */
+  .prediction-grid { display: flex; flex-direction: column; gap: 10px; }
   .prediction-card { background: #111; border: 2px solid #222; border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.25s ease; display: flex; align-items: center; gap: 12px; }
   .prediction-card:hover { border-color: #ff4400; transform: translateX(4px); }
   .prediction-card.selected { border-color: #ff4400; background: linear-gradient(135deg, #1a1008, #0d0d0d); }
@@ -342,6 +363,8 @@
 </div>
 
 <script>
+  // ===== LIVE VOTE STORAGE via Google Sheets + Apps Script =====
+  const VOTE_API = 'https://script.google.com/macros/s/AKfycbyLDr5uRDwbheTOJPlghcRpbsEkCBuLpDYwdG1c0BXfXpYpovM-YsvR5KDdEjT_7IQW/exec';
   const STORAGE_KEY = 'daytona_sx_2026_vote';
   const riders = {
     tomac:    { name: 'Eli Tomac',        number: '#3',  color: '#ff6600' },
@@ -358,20 +381,37 @@
   let predShort = null;
   let votes = { tomac: 0, lawrence: 0, webb: 0, roczen: 0 };
 
+  // Load live votes from Google Sheets API
   function loadVotes() {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY + '_tally');
-      if (saved) votes = JSON.parse(saved);
-    } catch(e) {}
-    const total = Object.values(votes).reduce((a,b) => a+b, 0);
-    if (total === 0) {
-      votes = { tomac: 47, lawrence: 38, webb: 29, roczen: 22 };
-      saveVotes();
-    }
+    fetch(VOTE_API)
+      .then(r => r.json())
+      .then(data => {
+        votes = data;
+        // If results are showing, update the tally display
+        if (document.getElementById('stepResult').classList.contains('active')) {
+          renderTally();
+        }
+      })
+      .catch(e => {
+        console.log('Vote load fallback to defaults');
+        votes = { tomac: 47, lawrence: 38, webb: 29, roczen: 22 };
+      });
   }
 
-  function saveVotes() {
-    try { localStorage.setItem(STORAGE_KEY + '_tally', JSON.stringify(votes)); } catch(e) {}
+  // Send vote to Google Sheets API
+  function sendVote(riderKey) {
+    fetch(VOTE_API, {
+      method: 'POST',
+      body: JSON.stringify({ rider: riderKey }),
+      headers: { 'Content-Type': 'text/plain' }
+    })
+    .then(r => r.json())
+    .then(data => { votes = data; renderTally(); })
+    .catch(e => {
+      // Fallback: increment locally
+      votes[riderKey] = (votes[riderKey] || 0) + 1;
+      renderTally();
+    });
   }
 
   function hasVoted() {
@@ -399,6 +439,7 @@
     document.getElementById('btn3').disabled = false;
   }
 
+  // Slider
   const sliderTrack = document.getElementById('sliderTrack');
   let isDragging = false;
   function updateSlider(e) {
@@ -430,10 +471,13 @@
   }
 
   function submitVote() {
+    // Record vote via API
     if (!hasVoted()) {
-      votes[selectedKey] = (votes[selectedKey] || 0) + 1;
-      saveVotes();
+      sendVote(selectedKey);
       markVoted();
+    } else {
+      // Already voted, just refresh totals
+      loadVotes();
     }
     showResults();
   }
@@ -445,64 +489,4 @@
     ['line1','line2'].forEach(l => document.getElementById(l).classList.add('done'));
 
     document.getElementById('resultName').textContent = selectedRider;
-    document.getElementById('resultNumber').textContent = selectedNumber;
-    document.getElementById('resultConf').textContent = confidence + '%';
-    document.getElementById('resultPredShort').textContent = predShort;
-
-    renderTally();
-  }
-
-  function renderTally() {
-    const total = Object.values(votes).reduce((a,b) => a+b, 0);
-    const maxVotes = Math.max(...Object.values(votes));
-    let html = '';
-
-    const sorted = Object.entries(votes).sort((a,b) => b[1] - a[1]);
-
-    for (const [key, count] of sorted) {
-      const rider = riders[key];
-      const pct = total > 0 ? Math.round((count / total) * 100) : 0;
-      const barWidth = maxVotes > 0 ? Math.max(3, (count / maxVotes) * 100) : 3;
-      const isYourPick = key === selectedKey;
-
-      html += '<div class="tally-bar-wrap">';
-      html += '<div class="tally-rider-row">';
-      html += '<span class="tally-rider-name" style="color:' + rider.color + '">' + rider.number + ' ' + rider.name + (isYourPick ? ' &#9668;' : '') + '</span>';
-      html += '<span class="tally-rider-votes">' + count + ' votes</span>';
-      html += '</div>';
-      html += '<div class="tally-bar">';
-      html += '<div class="tally-fill" style="width:' + barWidth + '%; background: linear-gradient(90deg, ' + rider.color + ', ' + rider.color + '88);">';
-      html += '<span class="tally-pct">' + pct + '%</span>';
-      html += '</div></div></div>';
-    }
-
-    document.getElementById('tallyBars').innerHTML = html;
-    document.getElementById('totalVotesLabel').textContent = total + ' total votes';
-  }
-
-  function copyResult() {
-    const text = '\u{1F3C1} My Daytona SX Pick: ' + selectedRider + ' ' + selectedNumber +
-      ' | ' + predShort + ' | ' + confidence + '% confident\n' + prediction +
-      '\n\nCast your vote: ' + window.location.href + '\n#DaytonaSX #Supercross #REVMX';
-    navigator.clipboard.writeText(text).then(() => {
-      const btn = document.querySelector('#stepResult .btn-primary');
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy My Pick', 2000);
-    });
-  }
-
-  function restart() {
-    selectedRider = null; selectedNumber = null; selectedKey = null;
-    confidence = 50; prediction = null;
-    document.querySelectorAll('.rider-card, .prediction-card').forEach(c => c.classList.remove('selected'));
-    document.getElementById('sliderFill').style.width = '50%';
-    document.getElementById('confValue').textContent = '50%';
-    document.getElementById('btn1').disabled = true;
-    document.getElementById('btn3').disabled = true;
-    goToStep(1);
-  }
-
-  loadVotes();
-</script>
-</body>
-</html>
+    document.getElementById('resultNumber').textContent = sele
