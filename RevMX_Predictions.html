@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>RevMX — Race Predictions | Pick Your Winner</title>
+<title>RevMX â Race Predictions | Pick Your Winner</title>
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ccjdub.github.io/daytona-sx-vote/RevMX_Predictions.html">
-<meta property="og:title" content="RevMX — Pick Your Supercross Winner">
-<meta property="og:description" content="Monday Moto Madness — Vote for who's taking the checkers this weekend. Lock in your prediction before race day!">
+<meta property="og:title" content="RevMX â Pick Your Supercross Winner">
+<meta property="og:description" content="Monday Moto Madness â Vote for who's taking the checkers this weekend. Lock in your prediction before race day!">
 <meta property="og:image" content="https://ccjdub.github.io/daytona-sx-vote/revmx-og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -17,8 +17,8 @@
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="RevMX — Pick Your Supercross Winner">
-<meta name="twitter:description" content="Monday Moto Madness — Vote for who's taking the checkers this weekend!">
+<meta name="twitter:title" content="RevMX â Pick Your Supercross Winner">
+<meta name="twitter:description" content="Monday Moto Madness â Vote for who's taking the checkers this weekend!">
 <meta name="twitter:image" content="https://ccjdub.github.io/daytona-sx-vote/revmx-og-image.png">
 
 <!-- iOS / Apple -->
@@ -647,19 +647,19 @@
       <div class="step-label">Step 2 of 2</div>
       <div class="step-title">Bold Prediction</div>
       <div class="prediction-grid">
-        <div class="prediction-card" data-pred="Holeshot to checkered flag — wire to wire" role="button" tabindex="0">
+        <div class="prediction-card" data-pred="Holeshot to checkered flag â wire to wire" role="button" tabindex="0">
           <div class="prediction-icon">&#128640;</div>
           <div><div class="prediction-text">Wire to Wire</div><div class="prediction-sub">Holeshot and never looks back</div></div>
         </div>
-        <div class="prediction-card" data-pred="Last lap pass — heart attack finish" role="button" tabindex="0">
+        <div class="prediction-card" data-pred="Last lap pass â heart attack finish" role="button" tabindex="0">
           <div class="prediction-icon">&#9889;</div>
           <div><div class="prediction-text">Last Lap Pass</div><div class="prediction-sub">Heart attack finish</div></div>
         </div>
-        <div class="prediction-card" data-pred="Comes from the back — charge through the pack" role="button" tabindex="0">
+        <div class="prediction-card" data-pred="Comes from the back â charge through the pack" role="button" tabindex="0">
           <div class="prediction-icon">&#128293;</div>
           <div><div class="prediction-text">From the Back</div><div class="prediction-sub">Charges through the pack</div></div>
         </div>
-        <div class="prediction-card" data-pred="Survives the chaos — last man standing" role="button" tabindex="0">
+        <div class="prediction-card" data-pred="Survives the chaos â last man standing" role="button" tabindex="0">
           <div class="prediction-icon">&#128128;</div>
           <div><div class="prediction-text">Chaos Survivor</div><div class="prediction-sub">Last one standing in Indy carnage</div></div>
         </div>
@@ -1043,14 +1043,51 @@
   }
 
   function loadNextRace() {
-    fetch(VOTE_API + '?action=races&status=upcoming')
+    // Fetch all races and find the next upcoming one by date
+    fetch(VOTE_API + '?action=races&status=all')
       .then(r => r.json())
       .then(data => {
         let html = '';
-        if (data && data.name) {
-          html += '<div class="next-race-title">' + data.name + '</div>';
-          html += '<div class="next-race-date">' + (data.date || 'TBD') + ' at ' + (data.location || '') + '</div>';
-          html += '<button class="btn btn-primary next-race-btn" onclick="makeVoteLink(\'' + (data.id || '') + '\')">Make Your Prediction</button>';
+        if (!data || !Array.isArray(data) || data.length === 0) {
+          html = '<div style="text-align:center;color:#888;padding:20px;">Check back soon for next race details</div>';
+          document.getElementById('nextRacePreview').innerHTML = html;
+          return;
+        }
+
+        // Use the current active race ID (defined at top scope) to exclude it
+
+        // Get upcoming/active races sorted by date, excluding the current one
+        var now = new Date();
+        now.setHours(0, 0, 0, 0);
+        var futureRaces = data.filter(function(r) {
+          // Include races with status "upcoming" or races that are in the future
+          if (r.status === 'completed') return false;
+          // Exclude the current active race being shown in "This Week"
+          if (r.raceId === currentRaceId) return false;
+          return true;
+        }).sort(function(a, b) {
+          return new Date(a.date) - new Date(b.date);
+        });
+
+        if (futureRaces.length > 0) {
+          var race = futureRaces[0];
+          html += '<div class="next-race-card" style="background:rgba(255,102,0,0.08);border:1px solid rgba(255,102,0,0.3);border-radius:12px;padding:24px;text-align:center;margin:10px 0;">';
+          html += '<div style="font-size:12px;text-transform:uppercase;letter-spacing:2px;color:#ff6600;margin-bottom:8px;">Coming Up Next</div>';
+          html += '<div class="next-race-title" style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px;">' + (race.name || 'Next Race') + '</div>';
+          html += '<div class="next-race-date" style="font-size:15px;color:#ccc;margin-bottom:4px;">' + formatRaceDate(race.date) + '</div>';
+          if (race.track) {
+            html += '<div class="next-race-track" style="font-size:14px;color:#999;margin-bottom:16px;">' + race.track + '</div>';
+          }
+          // Countdown
+          var raceDate = new Date(race.date);
+          var diffDays = Math.ceil((raceDate - now) / (1000 * 60 * 60 * 24));
+          if (diffDays > 0) {
+            html += '<div style="font-size:13px;color:#ff6600;margin-bottom:14px;">' + diffDays + ' day' + (diffDays !== 1 ? 's' : '') + ' away</div>';
+          }
+          if (race.raceId) {
+            html += '<button class="btn btn-primary next-race-btn" style="background:#ff6600;color:#fff;border:none;padding:10px 28px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;" onclick="makeVoteLink(\x27' + race.raceId + '\x27)">Make Your Prediction</button>';
+          }
+          html += '</div>';
         } else {
           html = '<div style="text-align:center;color:#888;padding:20px;">Check back soon for next race details</div>';
         }
@@ -1109,7 +1146,7 @@
     });
   });
 
-  // Slider removed — going directly from rider pick to prediction
+  // Slider removed â going directly from rider pick to prediction
 
   function goToStep(step) {
     document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
