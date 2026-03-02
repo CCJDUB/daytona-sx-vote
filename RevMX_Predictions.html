@@ -571,6 +571,301 @@
   .btn-restart:hover { border-color: #ff4400; color: #ff4400; }
 
   .footer { margin-top: auto; padding-top: 20px; text-align: center; font-size: 10px; color: #333; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* ===== PROMO SECTIONS ===== */
+  .promo-divider {
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #ff4400, #ffaa00, #ff4400, transparent);
+    margin: 32px 0 28px;
+    border-radius: 2px;
+  }
+
+  .promo-section {
+    margin-bottom: 24px;
+  }
+
+  .promo-section-label {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #ff6600;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  /* YouTube Music Card */
+  .music-card {
+    background: linear-gradient(135deg, #1a1008 0%, #0d0d0d 100%);
+    border: 2px solid #ff4400;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+  }
+
+  .music-card:hover {
+    border-color: #ffaa00;
+    box-shadow: 0 0 25px rgba(255,68,0,0.3);
+    transform: translateY(-2px);
+  }
+
+  .music-card-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .music-card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .music-card-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 64px;
+    height: 64px;
+    background: rgba(255,68,0,0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 30px rgba(255,68,0,0.5);
+    transition: all 0.3s ease;
+  }
+
+  .music-card:hover .music-card-play {
+    background: rgba(255,68,0,1);
+    box-shadow: 0 0 40px rgba(255,68,0,0.7);
+    transform: translate(-50%, -50%) scale(1.1);
+  }
+
+  .music-card-play::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 12px 0 12px 22px;
+    border-color: transparent transparent transparent #fff;
+    margin-left: 4px;
+  }
+
+  .music-card-body {
+    padding: 16px 18px;
+  }
+
+  .music-card-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+    color: #fff;
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .music-card-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .music-card-sub {
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 0.5px;
+  }
+
+  .music-card-views {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: #ff6600;
+    letter-spacing: 1px;
+  }
+
+  .views-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ff4400;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* Merch Card */
+  .merch-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+    border: 2px solid #FFD700;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+  }
+
+  .merch-card:hover {
+    border-color: #ffcc00;
+    box-shadow: 0 0 25px rgba(255,215,0,0.25);
+    transform: translateY(-2px);
+  }
+
+  .merch-card-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: #111;
+    overflow: hidden;
+  }
+
+  .merch-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  .merch-card:hover .merch-card-img img {
+    transform: scale(1.03);
+  }
+
+  .merch-card-body {
+    padding: 16px 18px;
+  }
+
+  .merch-card-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700, #DAA520);
+    color: #000;
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .merch-card-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFD700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .merch-card-sub {
+    font-size: 13px;
+    color: #888;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .merch-card-cta {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700, #DAA520);
+    color: #000;
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    padding: 10px 24px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .merch-card:hover .merch-card-cta {
+    box-shadow: 0 0 20px rgba(255,215,0,0.4);
+  }
+
+  /* RevMX Hub links */
+  .revmx-hub {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .hub-link {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: #ccc;
+    transition: all 0.25s ease;
+  }
+
+  .hub-link:hover {
+    border-color: #ff4400;
+    transform: translateX(4px);
+    color: #fff;
+  }
+
+  .hub-link-icon {
+    font-size: 22px;
+    min-width: 32px;
+    text-align: center;
+  }
+
+  .hub-link-text {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .hub-link-sub {
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.5px;
+    text-transform: none;
+  }
+
+  .hub-link-arrow {
+    margin-left: auto;
+    color: #444;
+    font-size: 16px;
+    transition: color 0.3s ease;
+  }
+
+  .hub-link:hover .hub-link-arrow {
+    color: #ff4400;
+  }
 </style>
 </head>
 <body>
@@ -729,6 +1024,77 @@
     <div class="step-title">Next Race</div>
     <div class="next-race-preview" id="nextRacePreview"></div>
     <button class="btn btn-restart" style="margin-top:20px;" onclick="navTo('current')">Back to Current</button>
+  </div>
+
+    <!-- ===== PROMO SECTIONS (scroll below main content) ===== -->
+  <div class="promo-divider"></div>
+
+  <!-- YouTube Music Promo -->
+  <div class="promo-section">
+    <div class="promo-section-label">&#127925; RevMX Music</div>
+    <a href="https://www.youtube.com/watch?v=J-876CxZyJY" target="_blank" rel="noopener" class="music-card" id="musicCard">
+      <div class="music-card-thumb">
+        <img src="https://img.youtube.com/vi/J-876CxZyJY/maxresdefault.jpg" alt="RevMX Latest Track" loading="lazy">
+        <div class="music-card-play"></div>
+      </div>
+      <div class="music-card-body">
+        <div class="music-card-badge">New Release</div>
+        <div class="music-card-title">Latest Track from RevMX</div>
+        <div class="music-card-sub">Moto Music &#215; Supercross Culture</div>
+        <div class="music-card-views">
+          <span class="views-dot"></span>
+          52K+ Views
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Merch Promo -->
+  <div class="promo-section">
+    <div class="promo-section-label">&#128293; Limited Drop</div>
+    <a href="https://merchjockey.com/products/8-time-king-of-daytona-eli-tomac?variant=55514029129801" target="_blank" rel="noopener" class="merch-card" id="merchCard">
+      <div class="merch-card-img">
+        <img src="https://merchjockey.com/cdn/shop/files/8xKingofDaytonaEliTomac-Front_800x.png" alt="8 Time King of Daytona - Eli Tomac Shirt" loading="lazy"
+          onerror="this.parentElement.innerHTML='<div style=&quot;display:flex;align-items:center;justify-content:center;height:100%;background:#111;font-size:60px;&quot;>&#128085;</div>';">
+      </div>
+      <div class="merch-card-body">
+        <div class="merch-card-badge">&#127942; MerchJockey Exclusive</div>
+        <div class="merch-card-title">8-Time King of Daytona</div>
+        <div class="merch-card-sub">Eli Tomac &#8212; Limited edition tribute tee</div>
+        <div class="merch-card-cta">Shop Now</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- RevMX Hub Links -->
+  <div class="promo-section">
+    <div class="promo-section-label">&#9889; RevMX Hub</div>
+    <div class="revmx-hub">
+      <a href="https://revmx.com" target="_blank" rel="noopener" class="hub-link">
+        <span class="hub-link-icon">&#127760;</span>
+        <div>
+          <div class="hub-link-text">RevMX.com</div>
+          <div class="hub-link-sub">News, music, and moto culture</div>
+        </div>
+        <span class="hub-link-arrow">&#8250;</span>
+      </a>
+      <a href="https://www.youtube.com/watch?v=J-876CxZyJY" target="_blank" rel="noopener" class="hub-link">
+        <span class="hub-link-icon">&#9654;</span>
+        <div>
+          <div class="hub-link-text">YouTube</div>
+          <div class="hub-link-sub">Watch the latest RevMX videos</div>
+        </div>
+        <span class="hub-link-arrow">&#8250;</span>
+      </a>
+      <a href="https://merchjockey.com/products/8-time-king-of-daytona-eli-tomac?variant=55514029129801" target="_blank" rel="noopener" class="hub-link">
+        <span class="hub-link-icon">&#128085;</span>
+        <div>
+          <div class="hub-link-text">MerchJockey Store</div>
+          <div class="hub-link-sub">Official RevMX gear and collabs</div>
+        </div>
+        <span class="hub-link-arrow">&#8250;</span>
+      </a>
+    </div>
   </div>
 
   <div class="footer">RevMX &#215; Moto Music &#215; Supercross 2026</div>
